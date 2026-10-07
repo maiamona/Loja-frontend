@@ -1,0 +1,838 @@
+.caixa-page {
+  padding: 24px;
+  background: #f5f6f8;
+  min-height: calc(100vh - 60px);
+}
+
+
+// =====================================================
+// CABEÇALHO
+// =====================================================
+
+.caixa-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 5px 0 0;
+    color: #6c757d;
+  }
+}
+
+
+// =====================================================
+// GRID
+// =====================================================
+
+.caixa-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.5fr)
+    minmax(400px, 1fr);
+
+  gap: 24px;
+
+  align-items: start;
+}
+
+
+// =====================================================
+// CARDS
+// =====================================================
+
+.produtos-card,
+.carrinho-card {
+  background: white;
+
+  border: 1px solid #dee2e6;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+.card-header {
+  padding: 18px 20px;
+
+  border-bottom: 1px solid #dee2e6;
+
+  background: #fff;
+
+  h2 {
+    margin: 0;
+
+    font-size: 20px;
+
+    font-weight: 600;
+  }
+}
+
+
+// =====================================================
+// PESQUISA
+// =====================================================
+
+.pesquisa-produto {
+  padding: 18px;
+
+  border-bottom: 1px solid #dee2e6;
+}
+
+
+// =====================================================
+// PRODUTOS
+// =====================================================
+
+.produtos-lista {
+  max-height: 650px;
+
+  overflow-y: auto;
+}
+
+
+.produto-item {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 18px 20px;
+
+  border-bottom: 1px solid #eee;
+
+  transition: background 0.2s;
+
+  &:hover {
+    background: #f8f9fa;
+  }
+}
+
+
+.produto-info {
+
+  h3 {
+    margin: 0 0 6px;
+
+    font-size: 16px;
+
+    font-weight: 600;
+  }
+}
+
+
+.produto-codigo {
+  color: #6c757d;
+
+  font-size: 13px;
+
+  margin-bottom: 4px;
+}
+
+
+.produto-stock {
+  font-size: 13px;
+
+  color: #198754;
+}
+
+
+.produto-preco {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 8px;
+
+  white-space: nowrap;
+
+  strong {
+    font-size: 17px;
+  }
+}
+
+
+// =====================================================
+// CARRINHO
+// =====================================================
+
+.carrinho-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  span {
+    display: block;
+
+    color: #6c757d;
+
+    font-size: 13px;
+
+    margin-top: 3px;
+  }
+}
+
+
+.carrinho-vazio {
+  text-align: center;
+
+  padding: 70px 20px;
+
+  color: #6c757d;
+
+  .icone-carrinho {
+    font-size: 50px;
+
+    margin-bottom: 15px;
+  }
+
+  h3 {
+    font-size: 18px;
+
+    color: #495057;
+  }
+}
+
+
+.carrinho-itens {
+  max-height: 420px;
+
+  overflow-y: auto;
+}
+
+
+.carrinho-item {
+  display: grid;
+
+  grid-template-columns:
+    minmax(130px, 1fr)
+    auto
+    auto;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 15px 18px;
+
+  border-bottom: 1px solid #eee;
+}
+
+
+.item-info {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+
+  small {
+    color: #6c757d;
+  }
+}
+
+
+// =====================================================
+// QUANTIDADE
+// =====================================================
+
+.quantidade {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  span {
+    min-width: 25px;
+
+    text-align: center;
+
+    font-weight: 600;
+  }
+}
+
+
+// =====================================================
+// SUBTOTAL
+// =====================================================
+
+.item-subtotal {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 3px;
+
+  white-space: nowrap;
+}
+
+
+// =====================================================
+// PAGAMENTO
+// =====================================================
+
+.pagamento {
+  padding: 20px;
+
+  border-top: 1px solid #dee2e6;
+
+  h3 {
+    font-size: 17px;
+
+    margin-bottom: 15px;
+  }
+
+  label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-weight: 500;
+  }
+}
+
+
+// =====================================================
+// TOTAIS
+// =====================================================
+
+.totais {
+  padding: 20px;
+
+  border-top: 1px solid #dee2e6;
+
+  > div {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 7px 0;
+  }
+
+  .total {
+    border-top: 2px solid #212529;
+
+    margin-top: 10px;
+
+    padding-top: 15px;
+
+    font-size: 22px;
+
+    strong {
+      font-size: 25px;
+    }
+  }
+}
+
+
+// =====================================================
+// BOTÃO FINALIZAR
+// =====================================================
+
+.btn-finalizar {
+  width: calc(100% - 40px);
+
+  margin: 0 20px 20px;
+
+  font-weight: 600;
+
+  padding: 13px;
+}
+
+
+// =====================================================
+// LOADING
+// =====================================================
+
+.loading {
+  padding: 40px;
+
+  text-align: center;
+
+  color: #6c757d;
+}
+
+
+.sem-produtos {
+  padding: 40px;
+
+  text-align: center;
+
+  color: #6c757d;
+}
+
+
+// =====================================================
+// RESPONSIVO
+// =====================================================
+
+@media (max-width: 1000px) {
+
+  .caixa-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .caixa-page {
+    padding: 12px;
+  }
+
+  .produto-item {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .produto-preco {
+    align-items: flex-start;
+  }
+
+  .carrinho-item {
+    grid-template-columns: 1fr;
+  }
+
+  .item-subtotal {
+    align-items: flex-start;
+  }
+
+}
+
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.modal-caixa {
+  width: 100%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.modal-header-caixa {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e9ecef;
+
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.btn-fechar {
+  border: none;
+  background: transparent;
+  font-size: 30px;
+  line-height: 1;
+  color: #6c757d;
+  cursor: pointer;
+
+  &:hover {
+    color: #212529;
+  }
+}
+
+.modal-body-caixa {
+  padding: 24px;
+}
+
+.modal-footer-caixa {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cliente-pergunta {
+  text-align: center;
+  padding: 10px 0 25px;
+
+  .cliente-icone {
+    font-size: 48px;
+    margin-bottom: 10px;
+  }
+
+  h4 {
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: #6c757d;
+    margin-bottom: 0;
+  }
+}
+
+.opcoes-cliente {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.opcao-cliente {
+  border: 1px solid #dee2e6;
+  background: #fff;
+  border-radius: 12px;
+  padding: 22px 15px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+
+  &:hover {
+    border-color: #0d6efd;
+    box-shadow: 0 5px 18px rgba(13, 110, 253, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .icone-opcao {
+    font-size: 32px;
+  }
+
+  strong {
+    font-size: 0.95rem;
+  }
+
+  small {
+    color: #6c757d;
+    line-height: 1.4;
+  }
+}
+
+.lista-clientes-caixa {
+  max-height: 350px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+}
+
+.cliente-caixa {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+  padding: 14px 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  text-align: left;
+  cursor: pointer;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: #f8f9fa;
+  }
+
+  strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  small {
+    display: block;
+    color: #6c757d;
+  }
+
+  > span {
+    font-size: 20px;
+    color: #0d6efd;
+  }
+}
+
+.sem-clientes {
+  padding: 30px;
+  text-align: center;
+  color: #6c757d;
+}
+
+@media (max-width: 700px) {
+
+  .opcoes-cliente {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-caixa {
+    max-height: 95vh;
+  }
+
+}
+
+.stock-disponivel {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.stock-normal {
+  color: #198754;
+}
+
+.stock-baixo {
+  color: #fd7e14;
+  font-weight: 600;
+}
+
+.stock-sem {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+// =====================================================
+// MODAL DE PROCESSAMENTO
+// =====================================================
+
+.modal-processamento {
+
+  width: 420px;
+  max-width: 90vw;
+
+  padding: 35px;
+
+  text-align: center;
+
+}
+
+
+// =====================================================
+// ÍCONE
+// =====================================================
+
+.processamento-icone {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  margin-bottom: 20px;
+
+}
+
+
+// =====================================================
+// ETAPAS
+// =====================================================
+
+.etapas-venda {
+
+  margin-top: 30px;
+
+  text-align: left;
+
+}
+
+
+.etapa-venda {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px 15px;
+
+  margin-bottom: 8px;
+
+  border-radius: 8px;
+
+  background: #f5f5f5;
+
+  color: #777;
+
+  transition: all 0.2s ease;
+
+}
+
+
+.etapa-venda.ativa {
+
+  background: #e8f1ff;
+
+  color: #0d6efd;
+
+  font-weight: 600;
+
+}
+
+
+.etapa-venda.concluida {
+
+  background: #eaf7ee;
+
+  color: #198754;
+
+  font-weight: 500;
+
+}
+
+
+// =====================================================
+// ÍCONE DA ETAPA
+// =====================================================
+
+.etapa-icone {
+
+  width: 25px;
+
+  height: 25px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-weight: bold;
+
+}
+
+
+// =====================================================
+// MENSAGEM
+// =====================================================
+
+.processamento-mensagem {
+
+  margin-top: 25px;
+
+  font-size: 14px;
+
+  color: #666;
+
+}
+
+// =====================================================
+// PAGAMENTO EM DINHEIRO
+// =====================================================
+
+.pagamento-dinheiro {
+
+  margin-top: 15px;
+
+}
+
+
+.valor-recebido {
+
+  font-size: 20px;
+
+  font-weight: 600;
+
+}
+
+
+// =====================================================
+// ALERTA DE PAGAMENTO
+// =====================================================
+
+.pagamento-alerta {
+
+  margin-top: 10px;
+
+  margin-bottom: 10px;
+
+}
+
+
+// =====================================================
+// TROCO
+// =====================================================
+
+.troco-box {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 16px 20px;
+
+  margin-top: 15px;
+
+  border-radius: 10px;
+
+  background: #eaf7ee;
+
+  border: 1px solid #b7dfc5;
+
+  color: #198754;
+
+}
+
+
+.troco-box span {
+
+  font-size: 17px;
+
+}
+
+
+.troco-box strong {
+
+  font-size: 24px;
+
+}
+
+
+// =====================================================
+// PAGAMENTO DIGITAL
+// =====================================================
+
+.pagamento-digital {
+
+  margin-top: 15px;
+
+}

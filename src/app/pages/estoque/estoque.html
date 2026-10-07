@@ -1,0 +1,604 @@
+<div class="estoque-page">
+
+
+    <!-- ================================================= -->
+    <!-- CABEÇALHO -->
+    <!-- ================================================= -->
+
+
+    <div class="estoque-header">
+
+        <div>
+
+            <h1>
+                📦 Gestão de Estoque
+            </h1>
+
+            <p>
+                Controle de estoque e movimentações
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- ALERTA DE ESTOQUE -->
+    <!-- ================================================= -->
+
+    <div *ngIf="produtosSemEstoque > 0 || produtosEstoqueBaixo > 0" class="alert alert-warning estoque-alerta"
+        role="alert">
+        <strong>⚠️ Atenção ao estoque!</strong>
+
+        <span *ngIf="produtosSemEstoque > 0">
+            {{ produtosSemEstoque }}
+            produto(s) sem estoque.
+        </span>
+
+        <span *ngIf="produtosEstoqueBaixo > 0">
+            {{ produtosEstoqueBaixo }}
+            produto(s) com estoque baixo.
+        </span>
+    </div>
+
+    <div *ngIf="produtosSemEstoque === 0 && produtosEstoqueBaixo === 0" class="alert alert-success estoque-alerta"
+        role="alert">
+        <strong>✅ Estoque controlado!</strong>
+        Não existem produtos abaixo do estoque mínimo.
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- MENSAGENS -->
+    <!-- ================================================= -->
+
+    <div *ngIf="mensagem" class="alert alert-success">
+
+        {{ mensagem }}
+
+    </div>
+
+
+    <div *ngIf="erro" class="alert alert-danger">
+
+        {{ erro }}
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- RESUMO -->
+    <!-- ================================================= -->
+
+    <div class="resumo-grid">
+
+        <div class="resumo-card">
+
+            <div class="resumo-icon">
+                📦
+            </div>
+
+            <div>
+
+                <span>
+                    Total de produtos
+                </span>
+
+                <strong>
+                    {{ totalProdutos }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="resumo-card">
+
+            <div class="resumo-icon">
+                ⚠️
+            </div>
+
+            <div>
+
+                <span>
+                    Estoque baixo
+                </span>
+
+                <strong>
+                    {{ produtosEstoqueBaixo }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="resumo-card">
+
+            <div class="resumo-icon">
+                🚫
+            </div>
+
+            <div>
+
+                <span>
+                    Sem estoque
+                </span>
+
+                <strong>
+                    {{ produtosSemEstoque }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="resumo-card">
+
+            <div class="resumo-icon">
+                📋
+            </div>
+
+            <div>
+
+                <span>
+                    Movimentações
+                </span>
+
+                <strong>
+                    {{ totalMovimentacoes }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ENTRADA DE ESTOQUE -->
+    <!-- ================================================= -->
+
+    <div class="card sistema-card">
+
+        <div class="card-header">
+
+            <h2>
+                ➕ Registar Entrada de Estoque
+            </h2>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <div class="form-grid">
+
+
+                <!-- PRODUTO -->
+
+                <div class="form-group">
+
+                    <label>
+                        Produto
+                    </label>
+
+                    <select class="form-select" [(ngModel)]="produtoSelecionado">
+
+                        <option [ngValue]="null">
+                            Selecione o produto
+                        </option>
+
+                        <option *ngFor="let produto of produtos" [ngValue]="produto.id">
+
+                            {{ produto.nome }}
+
+                            — Estoque:
+                            {{ produto.estoque }}
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- QUANTIDADE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Quantidade
+                    </label>
+
+                    <input type="number" class="form-control" min="1" [(ngModel)]="quantidadeEntrada"
+                        placeholder="Ex.: 10">
+
+                </div>
+
+
+                <!-- MOTIVO -->
+
+                <div class="form-group motivo-group">
+
+                    <label>
+                        Motivo
+                    </label>
+
+                    <input type="text" class="form-control" [(ngModel)]="motivoEntrada"
+                        placeholder="Ex.: Reposição de estoque">
+
+                </div>
+
+
+                <!-- BOTÃO -->
+
+                <div class="form-group button-group">
+
+                    <label>
+                        &nbsp;
+                    </label>
+
+                    <button type="button" class="btn btn-primary" (click)="registrarEntrada()"
+                        [disabled]="salvandoEntrada">
+
+                        <span *ngIf="!salvandoEntrada">
+                            ➕ Registar Entrada
+                        </span>
+
+                        <span *ngIf="salvandoEntrada">
+                            ⏳ A guardar...
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- PRODUTOS PARA REPOSIÇÃO -->
+    <!-- ================================================= -->
+
+    <div class="card mb-4" id="formulario-entrada">
+
+        <div class="card-header bg-warning">
+
+            <h5 class="mb-0">
+                ⚠️ Produtos para Reposição
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div *ngIf="produtosParaReposicao.length === 0" class="alert alert-success mb-0">
+
+                ✅ Todos os produtos estão com estoque normal.
+
+            </div>
+
+            <div *ngIf="produtosParaReposicao.length > 0" class="table-responsive">
+
+                <table class="table table-hover mb-0">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Produto</th>
+                            <th>Estoque atual</th>
+                            <th>Estoque mínimo</th>
+                            <th>Situação</th>
+                            <th>Ação</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr *ngFor="let produto of produtosParaReposicao">
+
+                            <td>
+                                <strong>
+                                    {{ produto.nome }}
+                                </strong>
+                            </td>
+
+                            <td>
+                                {{ produto.estoque }}
+                            </td>
+
+                            <td>
+                                {{ produto.estoqueMinimo || 0 }}
+                            </td>
+
+                            <td>
+
+                                <span class="situacao" [ngClass]="obterClasseSituacao(produto)">
+
+                                    {{ obterSituacao(produto) }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <button type="button" class="btn btn-sm btn-primary"
+                                    (click)="prepararReposicao(produto)">
+
+                                    ➕ Repor
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ESTOQUE ATUAL -->
+    <!-- ================================================= -->
+
+    <div class="card sistema-card">
+
+        <div class="card-header">
+
+            <h2>
+                📊 Estoque Atual
+            </h2>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Produto
+                        </th>
+
+                        <th>
+                            Categoria
+                        </th>
+
+                        <th>
+                            Estoque
+                        </th>
+
+                        <th>
+                            Estoque mínimo
+                        </th>
+
+                        <th>
+                            Situação
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr *ngFor="let produto of produtos">
+
+                        <td>
+                            {{ produto.id }}
+                        </td>
+
+                        <td>
+                            <strong>
+                                {{ produto.nome }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ produto.categoria || '-' }}
+                        </td>
+
+                        <td>
+                            <strong>
+                                {{ produto.estoque }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ produto.estoqueMinimo || 0 }}
+                        </td>
+
+                        <td>
+
+                            <span class="situacao" [ngClass]="obterClasseSituacao(produto)">
+
+                                {{ obterSituacao(produto) }}
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+
+                    <tr *ngIf="produtos.length === 0">
+
+                        <td colspan="6" class="text-center">
+
+                            Nenhum produto encontrado.
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- HISTÓRICO -->
+    <!-- ================================================= -->
+
+    <div class="card sistema-card">
+
+        <div class="card-header">
+
+            <h2>
+                📋 Histórico de Movimentações
+            </h2>
+
+        </div>
+
+
+        <div *ngIf="carregando" class="loading">
+
+            ⏳ Carregando movimentações...
+
+        </div>
+
+
+        <div *ngIf="!carregando" class="table-responsive">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Data
+                        </th>
+
+                        <th>
+                            Produto
+                        </th>
+
+                        <th>
+                            Tipo
+                        </th>
+
+                        <th>
+                            Quantidade
+                        </th>
+
+                        <th>
+                            Estoque anterior
+                        </th>
+
+                        <th>
+                            Estoque atual
+                        </th>
+
+                        <th>
+                            Motivo
+                        </th>
+
+                        <th>
+                            Pedido
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr *ngFor="let movimentacao of movimentacoes">
+
+                        <td>
+                            {{ formatarData(
+                            movimentacao.dataMovimentacao
+                            ) }}
+                        </td>
+
+                        <td>
+                            {{ movimentacao.produto }}
+                        </td>
+
+                        <td>
+
+                            <span class="tipo-badge">
+
+                                {{ movimentacao.tipo }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+                            {{ movimentacao.quantidade }}
+                        </td>
+
+                        <td>
+                            {{ movimentacao.estoqueAnterior }}
+                        </td>
+
+                        <td>
+                            <strong>
+                                {{ movimentacao.estoqueAtual }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            {{ movimentacao.motivo || '-' }}
+                        </td>
+
+                        <td>
+                            {{ movimentacao.pedido || '-' }}
+                        </td>
+
+                    </tr>
+
+
+                    <tr *ngIf="movimentacoes.length === 0">
+
+                        <td colspan="8" class="text-center">
+
+                            Nenhuma movimentação encontrada.
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

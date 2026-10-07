@@ -1,0 +1,314 @@
+.estoque-page {
+  padding: 24px;
+}
+
+
+// =====================================================
+// CABEÇALHO
+// =====================================================
+
+.estoque-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: #6c757d;
+  }
+}
+
+
+// =====================================================
+// RESUMO
+// =====================================================
+
+.resumo-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+
+.resumo-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  background: #fff;
+
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+
+  padding: 20px;
+
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.05);
+
+
+  .resumo-icon {
+    font-size: 30px;
+  }
+
+
+  span {
+    display: block;
+    color: #6c757d;
+    font-size: 14px;
+  }
+
+
+  strong {
+    display: block;
+    font-size: 26px;
+    margin-top: 3px;
+  }
+}
+
+
+// =====================================================
+// CARDS
+// =====================================================
+
+.sistema-card {
+  margin-bottom: 24px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.06);
+
+
+  .card-header {
+    background: #fff;
+
+    border-bottom:
+      1px solid #e9ecef;
+
+    padding: 18px 20px;
+
+
+    h2 {
+      margin: 0;
+
+      font-size: 18px;
+
+      font-weight: 600;
+    }
+  }
+
+
+  .card-body {
+    padding: 20px;
+  }
+}
+
+
+// =====================================================
+// FORMULÁRIO
+// =====================================================
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns:
+    2fr 1fr 2fr auto;
+
+  gap: 16px;
+
+  align-items: end;
+}
+
+
+.form-group {
+
+  label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-weight: 500;
+  }
+}
+
+
+.button-group {
+  min-width: 170px;
+}
+
+
+// =====================================================
+// TABELAS
+// =====================================================
+
+.table {
+  margin-bottom: 0;
+
+  th {
+    white-space: nowrap;
+
+    font-size: 13px;
+
+    color: #495057;
+
+    background: #f8f9fa;
+  }
+
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+
+// =====================================================
+// SITUAÇÃO
+// =====================================================
+
+.situacao {
+  display: inline-block;
+
+  padding: 5px 10px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+
+.situacao-normal {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+
+.situacao-baixo {
+  background: #fff3cd;
+  color: #664d03;
+}
+
+
+.situacao-sem-estoque {
+  background: #f8d7da;
+  color: #842029;
+}
+
+
+// =====================================================
+// TIPO MOVIMENTAÇÃO
+// =====================================================
+
+.tipo-badge {
+  display: inline-block;
+
+  padding: 4px 9px;
+
+  border-radius: 5px;
+
+  background: #e7f1ff;
+
+  color: #0d6efd;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+
+// =====================================================
+// LOADING
+// =====================================================
+
+.loading {
+  padding: 30px;
+
+  text-align: center;
+
+  color: #6c757d;
+}
+
+
+// =====================================================
+// RESPONSIVO
+// =====================================================
+
+@media (max-width: 1100px) {
+
+  .resumo-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+
+  .form-grid {
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .estoque-page {
+    padding: 15px;
+  }
+
+
+  .resumo-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .button-group {
+    min-width: 100%;
+  }
+
+}
+
+.estoque-alerta {
+  margin: 20px 0;
+  border-radius: 10px;
+  font-size: 15px;
+
+  span {
+    margin-left: 15px;
+  }
+}
+
+// =====================================================
+// SITUAÇÃO DO ESTOQUE
+// =====================================================
+
+.normal {
+  color: #198754;
+  font-weight: 600;
+}
+
+.estoque-baixo {
+  color: #fd7e14;
+  font-weight: 600;
+}
+
+.sem-estoque {
+  color: #dc3545;
+  font-weight: 600;
+}

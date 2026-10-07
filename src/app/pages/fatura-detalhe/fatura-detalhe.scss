@@ -1,0 +1,131 @@
+.container-page {
+  padding: 24px;
+}
+
+.loading {
+  text-align: center;
+  padding: 50px;
+  color: #6c757d;
+}
+
+.acoes-fatura {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.fatura-documento {
+  max-width: 1000px;
+  margin: auto;
+  background: white;
+  padding: 40px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+
+.fatura-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  h1 {
+    font-size: 32px;
+    margin-bottom: 5px;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 26px;
+  }
+
+  p {
+    margin-bottom: 5px;
+  }
+}
+
+.empresa {
+  text-align: right;
+}
+
+.dados-fatura {
+  margin-top: 25px;
+  margin-bottom: 30px;
+
+  h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  p {
+    margin-bottom: 5px;
+  }
+}
+
+.itens-fatura {
+
+  h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .table {
+    margin-bottom: 0;
+  }
+}
+
+.totais-fatura {
+  width: 350px;
+  margin-left: auto;
+  margin-top: 25px;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+  }
+
+  .total {
+    border-top: 2px solid #212529;
+    margin-top: 8px;
+    padding-top: 12px;
+    font-size: 20px;
+  }
+}
+
+.fatura-footer {
+  text-align: center;
+  margin-top: 50px;
+  padding-top: 20px;
+  border-top: 1px solid #dee2e6;
+  color: #6c757d;
+
+  p {
+    margin-bottom: 5px;
+  }
+}
+
+@media print {
+
+  .no-print {
+    display: none !important;
+  }
+
+  .container-page {
+    padding: 0;
+  }
+
+  .fatura-documento {
+    max-width: none;
+    border: none;
+    border-radius: 0;
+    padding: 20px;
+  }
+
+  body {
+    background: white;
+  }
+
+  @page {
+    margin: 15mm;
+  }
+}

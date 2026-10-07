@@ -1,0 +1,295 @@
+<div class="container-page">
+
+  <!-- CARREGANDO -->
+
+  <div
+    class="loading"
+    *ngIf="carregando">
+
+    Carregando fatura...
+
+  </div>
+
+
+  <!-- ERRO -->
+
+  <div
+    class="alert alert-danger"
+    *ngIf="!carregando && erro">
+
+    {{ erro }}
+
+  </div>
+
+
+  <!-- FATURA -->
+
+  <div
+    class="fatura-area"
+    *ngIf="!carregando && fatura">
+
+
+    <!-- BOTÕES -->
+
+    <div class="acoes-fatura no-print">
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="voltar()">
+
+        ← Voltar
+
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="imprimir()">
+
+        🖨️ Imprimir Fatura
+
+      </button>
+
+    </div>
+
+
+    <!-- DOCUMENTO DA FATURA -->
+
+    <div class="fatura-documento">
+
+
+      <!-- CABEÇALHO -->
+
+      <div class="fatura-header">
+
+        <div>
+
+          <h1>FATURA</h1>
+
+          <p>
+            <strong>
+              {{ fatura.numero_fatura }}
+            </strong>
+          </p>
+
+        </div>
+
+
+        <div class="empresa">
+
+          <h2>LOJA</h2>
+
+          <p>
+            Gestão de Loja
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <hr>
+
+
+      <!-- DADOS DA FATURA -->
+
+      <div class="row dados-fatura">
+
+        <div class="col-md-6">
+
+          <h3>Cliente</h3>
+
+          <p>
+            <strong>
+              {{ fatura.cliente.nome }}
+            </strong>
+          </p>
+
+          <p *ngIf="fatura.cliente.telefone">
+            Telefone:
+            {{ fatura.cliente.telefone }}
+          </p>
+
+          <p *ngIf="fatura.cliente.email">
+            Email:
+            {{ fatura.cliente.email }}
+          </p>
+
+          <p *ngIf="fatura.cliente.endereco">
+            {{ fatura.cliente.endereco }}
+          </p>
+
+          <p *ngIf="fatura.cliente.cidade">
+            {{ fatura.cliente.cidade }}
+          </p>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+          <h3>Dados da Fatura</h3>
+
+          <p>
+            <strong>Fatura:</strong>
+            {{ fatura.numero_fatura }}
+          </p>
+
+          <p>
+            <strong>Pedido:</strong>
+            {{ fatura.pedido.numero }}
+          </p>
+
+          <p>
+            <strong>Data:</strong>
+            {{ fatura.data_emissao | date:'dd/MM/yyyy HH:mm' }}
+          </p>
+
+          <p>
+            <strong>Pagamento:</strong>
+            {{ fatura.forma_pagamento }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- ITENS -->
+
+      <div class="itens-fatura">
+
+        <h3>Produtos</h3>
+
+        <div class="table-responsive">
+
+          <table class="table table-bordered">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Produto
+                </th>
+
+                <th class="text-center">
+                  Quantidade
+                </th>
+
+                <th class="text-end">
+                  Preço Unitário
+                </th>
+
+                <th class="text-end">
+                  Subtotal
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr
+                *ngFor="let item of fatura.itens">
+
+                <td>
+                  {{ item.PRODUTO }}
+                </td>
+
+                <td class="text-center">
+                  {{ item.QUANTIDADE }}
+                </td>
+
+                <td class="text-end">
+                  {{ item.PRECO_UNITARIO | number:'1.2-2' }}
+                  Kz
+                </td>
+
+                <td class="text-end">
+                  {{ item.SUBTOTAL | number:'1.2-2' }}
+                  Kz
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+
+      <!-- TOTAIS -->
+
+      <div class="totais-fatura">
+
+        <div>
+
+          <span>
+            Subtotal:
+          </span>
+
+          <strong>
+            {{ fatura.valores.subtotal | number:'1.2-2' }}
+            Kz
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Taxa de entrega:
+          </span>
+
+          <strong>
+            {{ fatura.valores.taxa_entrega | number:'1.2-2' }}
+            Kz
+          </strong>
+
+        </div>
+
+
+        <div class="total">
+
+          <span>
+            TOTAL:
+          </span>
+
+          <strong>
+            {{ fatura.valores.total | number:'1.2-2' }}
+            Kz
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- RODAPÉ -->
+
+      <div class="fatura-footer">
+
+        <p>
+          Obrigado pela preferência!
+        </p>
+
+        <p>
+          Documento emitido pelo sistema de gestão da loja.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+

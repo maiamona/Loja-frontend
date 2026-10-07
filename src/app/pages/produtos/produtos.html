@@ -1,0 +1,638 @@
+ <div class="container-page">
+
+    <!-- =====================================================
+         CABEÇALHO
+    ====================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold mb-1">
+                Produtos
+            </h1>
+
+            <p class="text-muted mb-0">
+                Produtos cadastrados no sistema
+            </p>
+
+        </div>
+
+        <button
+            type="button"
+            class="btn btn-primary"
+            (click)="abrirFormulario()"
+            [disabled]="mostrarFormulario()">
+
+            + Novo Produto
+
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         FORMULÁRIO NOVO PRODUTO
+    ====================================================== -->
+
+    @if (mostrarFormulario()) {
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+                    Cadastrar Novo Produto
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row g-3">
+
+                    <!-- CÓDIGO DE BARRAS -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Código de Barras *
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="novoProduto.codigoBarras"
+                            placeholder="Ex.: 789100000030">
+
+                    </div>
+
+
+                    <!-- NOME -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Nome do Produto *
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="novoProduto.nome"
+                            placeholder="Ex.: Óleo 1L">
+
+                    </div>
+
+
+                    <!-- DESCRIÇÃO -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Descrição
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="novoProduto.descricao"
+                            placeholder="Descrição do produto">
+
+                    </div>
+
+
+                    <!-- CATEGORIA -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Categoria *
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="novoProduto.categoria"
+                            placeholder="Ex.: Alimentos">
+
+                    </div>
+
+
+                    <!-- PREÇO -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Preço (Kz) *
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            [(ngModel)]="novoProduto.preco"
+                            min="0"
+                            step="0.01"
+                            placeholder="Ex.: 3500">
+
+                    </div>
+
+
+                    <!-- ESTOQUE -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Estoque *
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            [(ngModel)]="novoProduto.estoque"
+                            min="0"
+                            step="1"
+                            placeholder="Ex.: 25">
+
+                    </div>
+
+
+                    <!-- =================================================
+                         IMAGEM DO NOVO PRODUTO
+                    ================================================== -->
+
+                    <div class="col-12">
+
+                        <label class="form-label fw-semibold">
+                            Imagem do Produto *
+                        </label>
+
+                        <div class="border rounded p-3">
+
+                            <input
+                                type="file"
+                                class="form-control"
+                                accept="image/*"
+                                (change)="selecionarImagemNovoProduto($event)">
+
+                            <small class="text-muted d-block mt-2">
+                                Formatos de imagem permitidos.
+                                Tamanho máximo: 5 MB.
+                            </small>
+
+
+                            @if (nomeImagemNovoProduto()) {
+
+                                <div class="alert alert-success mt-3 mb-0">
+
+                                    <strong>
+                                        Imagem selecionada:
+                                    </strong>
+
+                                    {{ nomeImagemNovoProduto() }}
+
+                                </div>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     MENSAGEM DO CADASTRO
+                ================================================== -->
+
+                @if (mensagemCadastro()) {
+
+                    <div
+                        class="alert mt-4"
+                        [class.alert-success]="
+                            mensagemCadastro().includes('sucesso')
+                        "
+                        [class.alert-danger]="
+                            mensagemCadastro().includes('Informe') ||
+                            mensagemCadastro().includes('Selecione') ||
+                            mensagemCadastro().includes('Erro') ||
+                            mensagemCadastro().includes('não')
+                        "
+                        [class.alert-info]="
+                            mensagemCadastro().includes('Cadastrando') ||
+                            mensagemCadastro().includes('Enviando')
+                        ">
+
+                        {{ mensagemCadastro() }}
+
+                    </div>
+
+                }
+
+
+                <!-- =================================================
+                     BOTÕES
+                ================================================== -->
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        (click)="fecharFormulario()"
+                        [disabled]="cadastrandoProduto()">
+
+                        Cancelar
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-success"
+                        (click)="cadastrarProduto()"
+                        [disabled]="cadastrandoProduto()">
+
+                        @if (cadastrandoProduto()) {
+
+                            <span
+                                class="spinner-border spinner-border-sm me-1"
+                                role="status">
+                            </span>
+
+                            Cadastrando...
+
+                        }
+                        @else {
+
+                            Cadastrar Produto
+
+                        }
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    }
+
+
+    <!-- =====================================================
+         CARREGANDO
+    ====================================================== -->
+
+    @if (carregando()) {
+
+        <div class="text-center py-5">
+
+            <div
+                class="spinner-border text-primary"
+                role="status">
+
+                <span class="visually-hidden">
+                    Carregando...
+                </span>
+
+            </div>
+
+            <p class="text-muted mt-3">
+                Carregando produtos...
+            </p>
+
+        </div>
+
+    }
+
+
+    <!-- =====================================================
+         ERRO
+    ====================================================== -->
+
+    @if (!carregando() && erro()) {
+
+        <div class="alert alert-danger">
+
+            {{ erro() }}
+
+        </div>
+
+    }
+
+
+    <!-- =====================================================
+         LISTA
+    ====================================================== -->
+
+    @if (!carregando() && !erro()) {
+
+        <div>
+
+            <div class="mb-3">
+
+                <span class="text-muted">
+                    Total de produtos:
+                </span>
+
+                <strong>
+                    {{ produtos().length }}
+                </strong>
+
+            </div>
+
+
+            <!-- =================================================
+                 TABELA
+            ================================================== -->
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Imagem
+                                    </th>
+
+                                    <th>
+                                        ID
+                                    </th>
+
+                                    <th>
+                                        Código de Barras
+                                    </th>
+
+                                    <th>
+                                        Produto
+                                    </th>
+
+                                    <th>
+                                        Categoria
+                                    </th>
+
+                                    <th>
+                                        Preço
+                                    </th>
+
+                                    <th>
+                                        Estoque
+                                    </th>
+
+                                    <th>
+                                        Ações
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                @for (
+                                    produto of produtos();
+                                    track produto.id
+                                ) {
+
+                                    <tr>
+
+                                        <!-- =================================================
+                                             IMAGEM
+                                        ================================================== -->
+
+                                        <td>
+
+                                            <div
+                                                class="produto-imagem-container">
+
+                                                <img
+                                                    [src]="obterUrlImagem(produto.id)"
+                                                    [alt]="produto.nome"
+                                                    class="produto-imagem"
+                                                    loading="lazy">
+
+                                            </div>
+
+                                        </td>
+
+
+                                        <!-- ID -->
+
+                                        <td>
+                                            {{ produto.id }}
+                                        </td>
+
+
+                                        <!-- CÓDIGO -->
+
+                                        <td>
+                                            {{ produto.codigoBarras }}
+                                        </td>
+
+
+                                        <!-- PRODUTO -->
+
+                                        <td>
+
+                                            <strong>
+                                                {{ produto.nome }}
+                                            </strong>
+
+                                            <br>
+
+                                            <small class="text-muted">
+                                                {{ produto.descricao }}
+                                            </small>
+
+                                        </td>
+
+
+                                        <!-- CATEGORIA -->
+
+                                        <td>
+                                            {{ produto.categoria }}
+                                        </td>
+
+
+                                        <!-- PREÇO -->
+
+                                        <td>
+
+                                            {{ produto.preco | number:'1.2-2' }}
+                                            Kz
+
+                                        </td>
+
+
+                                        <!-- ESTOQUE -->
+
+                                        <td>
+
+                                            @if (produto.estoque > 10) {
+
+                                                <span
+                                                    class="badge bg-success">
+
+                                                    {{ produto.estoque }}
+
+                                                </span>
+
+                                            }
+                                            @else if (produto.estoque > 0) {
+
+                                                <span
+                                                    class="badge bg-warning text-dark">
+
+                                                    {{ produto.estoque }}
+
+                                                </span>
+
+                                            }
+                                            @else {
+
+                                                <span
+                                                    class="badge bg-danger">
+
+                                                    0
+
+                                                </span>
+
+                                            }
+
+                                        </td>
+
+
+                                        <!-- =================================================
+                                             AÇÕES
+                                        ================================================== -->
+
+                                        <td>
+
+                                            <label
+                                                class="btn btn-outline-primary btn-sm mb-2">
+
+                                                📷 Alterar imagem
+
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    hidden
+                                                    (change)="selecionarImagem($event, produto.id)">
+
+                                            </label>
+
+
+                                            @if (
+                                                produtoImagemId() === produto.id &&
+                                                imagemSelecionada()
+                                            ) {
+
+                                                <div class="upload-box">
+
+                                                    <small class="text-muted d-block">
+
+                                                        Imagem selecionada:
+
+                                                    </small>
+
+                                                    <strong class="d-block mb-2">
+
+                                                        {{ imagemSelecionada()?.name }}
+
+                                                    </strong>
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-success btn-sm"
+                                                        [disabled]="enviandoImagem()"
+                                                        (click)="enviarImagem()">
+
+                                                        @if (enviandoImagem()) {
+
+                                                            <span
+                                                                class="spinner-border spinner-border-sm me-1">
+                                                            </span>
+
+                                                            Enviando...
+
+                                                        }
+                                                        @else {
+
+                                                            ↑ Enviar imagem
+
+                                                        }
+
+                                                    </button>
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-outline-secondary btn-sm ms-1"
+                                                        [disabled]="enviandoImagem()"
+                                                        (click)="cancelarImagem()">
+
+                                                        Cancelar
+
+                                                    </button>
+
+                                                </div>
+
+                                            }
+
+                                        </td>
+
+                                    </tr>
+
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 MENSAGEM DO UPLOAD
+            ================================================== -->
+
+            @if (mensagemImagem()) {
+
+                <div
+                    class="alert mt-3"
+                    [class.alert-success]="
+                        mensagemImagem().includes('sucesso')
+                    "
+                    [class.alert-danger]="
+                        mensagemImagem().includes('Erro') ||
+                        mensagemImagem().includes('não') ||
+                        mensagemImagem().includes('Selecione')
+                    ">
+
+                    {{ mensagemImagem() }}
+
+                </div>
+
+            }
+
+        </div>
+
+    }
+
+</div>

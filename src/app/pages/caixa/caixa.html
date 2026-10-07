@@ -1,0 +1,967 @@
+<div class="caixa-page">
+
+  <!-- ================================================= -->
+  <!-- CABEÇALHO -->
+  <!-- ================================================= -->
+
+  <div class="caixa-header">
+
+    <div>
+
+      <h1>
+        🛒 Caixa
+      </h1>
+
+      <p>
+        Registo de vendas
+      </p>
+
+    </div>
+
+    <div class="caixa-status">
+
+      <span class="badge bg-success">
+        Caixa aberto
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- ERRO -->
+  <!-- ================================================= -->
+
+  <div *ngIf="erro" class="alert alert-danger">
+
+    {{ erro }}
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- ÁREA PRINCIPAL -->
+  <!-- ================================================= -->
+
+  <div class="caixa-grid">
+
+
+    <!-- ================================================= -->
+    <!-- PRODUTOS -->
+    <!-- ================================================= -->
+
+    <div class="produtos-card">
+
+      <div class="card-header">
+
+        <h2>
+          Produtos
+        </h2>
+
+      </div>
+
+
+      <!-- PESQUISA -->
+
+      <div class="pesquisa-produto">
+
+        <div class="input-group">
+
+          <span class="input-group-text">
+            🔎
+          </span>
+
+          <input type="text" class="form-control" placeholder="Pesquisar por nome ou código de barras..."
+            [(ngModel)]="pesquisa" (input)="pesquisarProduto()">
+
+        </div>
+
+      </div>
+
+
+      <!-- CARREGANDO -->
+
+      <div *ngIf="carregandoProdutos" class="loading">
+
+        Carregando produtos...
+
+      </div>
+
+
+      <!-- LISTA -->
+
+      <div *ngIf="!carregandoProdutos" class="produtos-lista">
+
+
+        <div *ngFor="let produto of produtosFiltrados" class="produto-item">
+
+
+          <div class="produto-info">
+
+            <h3>
+              {{ produto.nome }}
+            </h3>
+
+            <div class="produto-codigo">
+
+              Código:
+              {{ produto.codigoBarras }}
+
+            </div>
+
+            <div class="produto-stock">
+
+              Stock:
+              <strong>
+                {{ produto.estoque }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="produto-preco">
+
+            <strong>
+
+              {{ produto.preco |
+              number:'1.2-2' }}
+
+              Kz
+
+            </strong>
+
+
+            <button type="button" class="btn btn-primary btn-sm" [disabled]="produto.estoque <= 0"
+              (click)="adicionarProduto(produto)">
+
+              + Adicionar
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- SEM PRODUTOS -->
+
+        <div *ngIf="produtosFiltrados.length === 0" class="sem-produtos">
+
+          Nenhum produto encontrado.
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- CARRINHO -->
+    <!-- ================================================= -->
+
+    <div class="carrinho-card">
+
+
+      <div class="card-header carrinho-header">
+
+        <div>
+
+          <h2>
+            🛍️ Venda atual
+          </h2>
+
+          <span>
+            {{ carrinho.length }}
+            produto(s)
+          </span>
+
+        </div>
+
+
+        <button *ngIf="carrinho.length > 0" type="button" class="btn btn-outline-danger btn-sm"
+          (click)="limparCarrinho()">
+
+          🗑️ Limpar
+
+        </button>
+
+      </div>
+
+
+      <!-- CARRINHO VAZIO -->
+
+      <div *ngIf="carrinho.length === 0" class="carrinho-vazio">
+
+        <div class="icone-carrinho">
+          🛒
+        </div>
+
+        <h3>
+          Nenhum produto adicionado
+        </h3>
+
+        <p>
+          Pesquise um produto e clique em
+          <strong>Adicionar</strong>.
+        </p>
+
+      </div>
+
+
+      <!-- ITENS -->
+
+      <div *ngIf="carrinho.length > 0" class="carrinho-itens">
+
+
+        <div *ngFor="let item of carrinho" class="carrinho-item">
+
+
+          <div class="item-info">
+
+            <strong>
+              {{ item.nome }}
+            </strong>
+
+            <small>
+              {{ item.preco |
+              number:'1.2-2' }}
+              Kz / unidade
+            </small>
+
+            <small class="stock-disponivel" [ngClass]="obterClasseEstoqueCarrinho(item)">
+              Disponível:
+              <strong>
+                {{ obterEstoqueDisponivel(item) }}
+              </strong>
+
+              <span *ngIf="obterEstoqueDisponivel(item) <= 0">
+                — Sem estoque
+              </span>
+
+              <span *ngIf="
+      obterEstoqueDisponivel(item) > 0 &&
+      obterEstoqueDisponivel(item) <= 5
+    ">
+                — Estoque baixo
+              </span>
+            </small>
+
+          </div>
+
+
+          <!-- QUANTIDADE -->
+
+          <div class="quantidade">
+
+            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="diminuirQuantidade(item)">
+
+              −
+
+            </button>
+
+
+            <span>
+              {{ item.quantidade }}
+            </span>
+
+
+            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="aumentarQuantidade(item)">
+
+              +
+
+            </button>
+
+          </div>
+
+
+          <!-- SUBTOTAL -->
+
+          <div class="item-subtotal">
+
+            <strong>
+
+              {{ item.subtotal |
+              number:'1.2-2' }}
+
+              Kz
+
+            </strong>
+
+
+            <button type="button" class="btn btn-link btn-sm text-danger" (click)="removerProduto(item)">
+
+              Remover
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+     <!-- ================================================= -->
+<!-- PAGAMENTO -->
+<!-- ================================================= -->
+
+<div class="pagamento">
+
+  <h3>
+    💰 Pagamento
+  </h3>
+
+
+  <!-- FORMA DE PAGAMENTO -->
+
+  <div class="mb-3">
+
+    <label class="form-label">
+      Forma de pagamento
+    </label>
+
+    <select
+      class="form-select"
+      [(ngModel)]="formaPagamento"
+    >
+
+      <option value="Dinheiro">
+        💵 Dinheiro
+      </option>
+
+      <option value="Cartão">
+        💳 Cartão
+      </option>
+
+      <option value="Multicaixa">
+        🏧 Multicaixa
+      </option>
+
+      <option value="Transferência">
+        🏦 Transferência
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- PAGAMENTO EM DINHEIRO -->
+  <!-- ================================================= -->
+
+  <div
+    *ngIf="formaPagamento === 'Dinheiro'"
+    class="pagamento-dinheiro"
+  >
+
+    <div class="mb-3">
+
+      <label class="form-label">
+        Valor recebido
+      </label>
+
+      <div class="input-group">
+
+        <input
+          type="number"
+          class="form-control valor-recebido"
+          [(ngModel)]="valorRecebido"
+          min="0"
+          step="1"
+          placeholder="0"
+        >
+
+        <span class="input-group-text">
+          Kz
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- VALOR EM FALTA -->
+
+    <div
+      *ngIf="valorEmFalta > 0"
+      class="alert alert-warning pagamento-alerta"
+    >
+
+      <strong>
+        ⚠️ Valor insuficiente
+      </strong>
+
+      <div>
+        Falta receber:
+
+        <strong>
+          {{ valorEmFalta | number:'1.2-2' }} Kz
+        </strong>
+      </div>
+
+    </div>
+
+
+    <!-- TROCO -->
+
+    <div
+      *ngIf="pagamentoValido && valorRecebido > 0"
+      class="troco-box"
+    >
+
+      <span>
+        Troco
+      </span>
+
+      <strong>
+        {{ troco | number:'1.2-2' }} Kz
+      </strong>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- PAGAMENTOS DIGITAIS -->
+  <!-- ================================================= -->
+
+  <div
+    *ngIf="formaPagamento !== 'Dinheiro'"
+    class="pagamento-digital"
+  >
+
+    <div class="alert alert-info">
+
+      <strong>
+        {{ formaPagamento }}
+      </strong>
+
+      <br>
+
+      Valor a pagar:
+
+      <strong>
+        {{ total | number:'1.2-2' }} Kz
+      </strong>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+      <!-- ================================================= -->
+      <!-- TOTAIS -->
+      <!-- ================================================= -->
+
+      <div class="totais">
+
+
+        <div>
+
+          <span>
+            Subtotal
+          </span>
+
+          <strong>
+
+            {{ subtotal |
+            number:'1.2-2' }}
+
+            Kz
+
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Taxa de entrega
+          </span>
+
+          <strong>
+
+            {{ taxaEntrega |
+            number:'1.2-2' }}
+
+            Kz
+
+          </strong>
+
+        </div>
+
+
+        <div class="total">
+
+          <span>
+            TOTAL
+          </span>
+
+          <strong>
+
+            {{ total |
+            number:'1.2-2' }}
+
+            Kz
+
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- ================================================= -->
+      <!-- FINALIZAR -->
+      <!-- ================================================= -->
+
+      <button
+  type="button"
+  class="btn btn-success btn-lg btn-finalizar"
+  [disabled]="
+    carrinho.length === 0 ||
+    finalizandoVenda ||
+    !pagamentoValido
+  "
+  (click)="finalizarVenda()"
+>
+
+  <span *ngIf="!finalizandoVenda">
+    💳 Finalizar Venda
+  </span>
+
+  <span *ngIf="finalizandoVenda">
+    ⏳ Processando...
+  </span>
+
+</button>
+
+    </div>
+
+  </div>
+
+  <!-- =====================================================
+     MODAL: IDENTIFICAÇÃO DO CLIENTE
+     ===================================================== -->
+
+  <div class="modal-backdrop-custom" *ngIf="mostrarModalCliente">
+
+    <div class="modal-caixa">
+
+      <div class="modal-header-caixa">
+
+        <h3>
+          Identificação do cliente
+        </h3>
+
+        <button type="button" class="btn-fechar" (click)="cancelarIdentificacaoCliente()">
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- PERGUNTA -->
+
+      <div *ngIf="etapaCliente === 'pergunta'" class="modal-body-caixa">
+
+        <div class="cliente-pergunta">
+
+          <div class="cliente-icone">
+            👤
+          </div>
+
+          <h4>
+            O cliente deseja identificar-se?
+          </h4>
+
+          <p>
+            Escolha uma das opções abaixo.
+          </p>
+
+        </div>
+
+
+        <div class="opcoes-cliente">
+
+          <button type="button" class="opcao-cliente" (click)="clienteJaCadastrado()">
+
+            <span class="icone-opcao">
+              🔎
+            </span>
+
+            <strong>
+              Já sou cadastrado
+            </strong>
+
+            <small>
+              Selecionar cliente existente
+            </small>
+
+          </button>
+
+
+          <button type="button" class="opcao-cliente" (click)="queroCadastrarCliente()">
+
+            <span class="icone-opcao">
+              ➕
+            </span>
+
+            <strong>
+              Quero me cadastrar
+            </strong>
+
+            <small>
+              Criar novo cliente
+            </small>
+
+          </button>
+
+
+          <button type="button" class="opcao-cliente" (click)="vendaAnonima()">
+
+            <span class="icone-opcao">
+              👤
+            </span>
+
+            <strong>
+              Não quero cadastro
+            </strong>
+
+            <small>
+              Continuar como cliente anónimo
+            </small>
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- SELECIONAR CLIENTE -->
+
+      <div *ngIf="etapaCliente === 'selecionar'" class="modal-body-caixa">
+
+        <div class="mb-3">
+
+          <label class="form-label">
+            Pesquisar cliente
+          </label>
+
+          <input type="text" class="form-control" [(ngModel)]="pesquisaCliente" (input)="pesquisarCliente()"
+            placeholder="Nome, telefone ou email...">
+
+        </div>
+
+
+        <div class="lista-clientes-caixa">
+
+          <button type="button" class="cliente-caixa" *ngFor="let cliente of clientesFiltrados"
+            (click)="selecionarCliente(cliente)">
+
+            <div>
+
+              <strong>
+                {{ cliente.nome }}
+              </strong>
+
+              <small *ngIf="cliente.telefone">
+                📞 {{ cliente.telefone }}
+              </small>
+
+              <small *ngIf="cliente.email">
+                ✉️ {{ cliente.email }}
+              </small>
+
+            </div>
+
+            <span>
+              →
+            </span>
+
+          </button>
+
+
+          <div class="sem-clientes" *ngIf="clientesFiltrados.length === 0">
+
+            Nenhum cliente encontrado.
+
+          </div>
+
+        </div>
+
+
+        <div class="modal-footer-caixa">
+
+          <button type="button" class="btn btn-secondary" (click)="etapaCliente = 'pergunta'">
+            Voltar
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+     MODAL: NOVO CLIENTE
+     ===================================================== -->
+
+  <div class="modal-backdrop-custom" *ngIf="mostrarModalNovoCliente">
+
+    <div class="modal-caixa">
+
+      <div class="modal-header-caixa">
+
+        <h3>
+          Novo cliente
+        </h3>
+
+        <button type="button" class="btn-fechar" (click)="cancelarNovoCliente()">
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="modal-body-caixa">
+
+        <p class="text-muted">
+          Cadastre rapidamente o cliente para associá-lo
+          a esta venda.
+        </p>
+
+
+        <div class="mb-3">
+
+          <label class="form-label">
+            Nome *
+          </label>
+
+          <input type="text" class="form-control" [(ngModel)]="novoCliente.nome" placeholder="Nome completo">
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="form-label">
+            Telefone
+          </label>
+
+          <input type="text" class="form-control" [(ngModel)]="novoCliente.telefone" placeholder="Telefone">
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="form-label">
+            Email
+          </label>
+
+          <input type="email" class="form-control" [(ngModel)]="novoCliente.email" placeholder="Email">
+
+        </div>
+
+
+        <div class="modal-footer-caixa">
+
+          <button type="button" class="btn btn-secondary" (click)="cancelarNovoCliente()">
+            Cancelar
+          </button>
+
+          <button type="button" class="btn btn-primary" (click)="cadastrarCliente()">
+            Cadastrar e continuar
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ===================================================== -->
+<!-- MODAL: PROCESSAMENTO DA VENDA -->
+<!-- ===================================================== -->
+
+<div
+  class="modal-backdrop-custom"
+  *ngIf="finalizandoVenda"
+>
+
+  <div class="modal-caixa modal-processamento">
+
+    <!-- ÍCONE -->
+
+    <div class="processamento-icone">
+
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">
+          Processando...
+        </span>
+      </div>
+
+    </div>
+
+
+    <!-- TÍTULO -->
+
+    <h3 class="text-center">
+
+      Processando venda
+
+    </h3>
+
+
+    <p class="text-center text-muted">
+
+      Aguarde enquanto concluímos a venda.
+
+    </p>
+
+
+    <!-- ETAPAS -->
+
+    <div class="etapas-venda">
+
+
+      <!-- PEDIDO -->
+
+      <div
+        class="etapa-venda"
+        [ngClass]="{
+          'ativa': etapaProcessamento === 'pedido',
+          'concluida':
+            etapaProcessamento === 'estoque' ||
+            etapaProcessamento === 'fatura' ||
+            etapaProcessamento === 'concluido'
+        }"
+      >
+
+        <span class="etapa-icone">
+
+          <span
+            *ngIf="etapaProcessamento === 'pedido'"
+            class="spinner-border spinner-border-sm"
+          ></span>
+
+          <span
+            *ngIf="
+              etapaProcessamento !== 'pedido'
+            "
+          >
+            ✓
+          </span>
+
+        </span>
+
+        <span>
+          Criar pedido
+        </span>
+
+      </div>
+
+
+      <!-- STOCK -->
+
+      <div
+        class="etapa-venda"
+        [ngClass]="{
+          'ativa': etapaProcessamento === 'estoque',
+          'concluida':
+            etapaProcessamento === 'fatura' ||
+            etapaProcessamento === 'concluido'
+        }"
+      >
+
+        <span class="etapa-icone">
+
+          <span
+            *ngIf="etapaProcessamento === 'estoque'"
+            class="spinner-border spinner-border-sm"
+          ></span>
+
+          <span
+            *ngIf="
+              etapaProcessamento === 'fatura' ||
+              etapaProcessamento === 'concluido'
+            "
+          >
+            ✓
+          </span>
+
+        </span>
+
+        <span>
+          Atualizar stock
+        </span>
+
+      </div>
+
+
+      <!-- FATURA -->
+
+      <div
+        class="etapa-venda"
+        [ngClass]="{
+          'ativa': etapaProcessamento === 'fatura',
+          'concluida':
+            etapaProcessamento === 'concluido'
+        }"
+      >
+
+        <span class="etapa-icone">
+
+          <span
+            *ngIf="etapaProcessamento === 'fatura'"
+            class="spinner-border spinner-border-sm"
+          ></span>
+
+          <span
+            *ngIf="
+              etapaProcessamento === 'concluido'
+            "
+          >
+            ✓
+          </span>
+
+        </span>
+
+        <span>
+          Gerar fatura
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- MENSAGEM -->
+
+    <div class="processamento-mensagem">
+
+      {{ obterMensagemProcessamento() }}
+
+    </div>
+
+  </div>
+
+</div>
+
+</div>

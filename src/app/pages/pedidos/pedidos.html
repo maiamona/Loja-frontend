@@ -1,0 +1,539 @@
+<div class="container-page">
+
+    <!-- CABEÇALHO -->
+    <div class="page-header">
+
+        <div>
+            <h1>Pedidos</h1>
+            <p class="text-muted">
+                Gestão de pedidos da loja.
+            </p>
+        </div>
+
+        <button type="button" class="btn btn-primary" (click)="novoPedido()" *ngIf="!mostrarFormulario">
+
+            <span>+</span>
+            Novo Pedido
+
+        </button>
+
+    </div>
+
+
+    <!-- MENSAGEM DE SUCESSO -->
+    <div class="alert alert-success" *ngIf="mensagem">
+
+        {{ mensagem }}
+
+    </div>
+
+
+    <!-- MENSAGEM DE ERRO -->
+    <div class="alert alert-danger" *ngIf="erro">
+
+        {{ erro }}
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- FORMULÁRIO NOVO PEDIDO -->
+    <!-- ============================= -->
+
+    <div class="card pedido-formulario" *ngIf="mostrarFormulario">
+
+        <div class="card-header">
+
+            <h2>Novo Pedido</h2>
+
+            <button type="button" class="btn btn-outline-secondary" (click)="cancelarPedido()">
+
+                Cancelar
+
+            </button>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <!-- CLIENTE E PAGAMENTO -->
+
+            <div class="row g-3 mb-4">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Cliente *
+                    </label>
+
+                    <select class="form-select" [(ngModel)]="clienteId">
+
+                        <option [ngValue]="null">
+                            -- Selecionar cliente --
+                        </option>
+
+                        <option *ngFor="let cliente of clientes" [ngValue]="cliente.id">
+
+                            {{ cliente.nome }}
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <label class="form-label">
+                        Forma de pagamento *
+                    </label>
+
+                    <select class="form-select" [(ngModel)]="formaPagamento">
+
+                        <option value="Dinheiro">
+                            Dinheiro
+                        </option>
+
+                        <option value="Cartão">
+                            Cartão
+                        </option>
+
+                        <option value="Transferência">
+                            Transferência
+                        </option>
+
+                        <option value="Multicaixa">
+                            Multicaixa
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <label class="form-label">
+                        Taxa de entrega
+                    </label>
+
+                    <input type="number" class="form-control" [(ngModel)]="taxaEntrega" min="0">
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUTOS -->
+
+            <div class="section-title">
+
+                <h3>Produtos do pedido</h3>
+
+                <button type="button" class="btn btn-outline-primary btn-sm" (click)="adicionarItem()">
+
+                    + Adicionar produto
+
+                </button>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th style="width: 40%;">
+                                Produto
+                            </th>
+
+                            <th style="width: 15%;">
+                                Estoque
+                            </th>
+
+                            <th style="width: 15%;">
+                                Quantidade
+                            </th>
+
+                            <th style="width: 15%;">
+                                Preço
+                            </th>
+
+                            <th style="width: 15%;">
+                                Subtotal
+                            </th>
+
+                            <th style="width: 50px;">
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr *ngFor="let item of itens; let i = index">
+
+                            <!-- PRODUTO -->
+
+                            <td>
+
+                                <select class="form-select" [(ngModel)]="item.produtoId"
+                                    (ngModelChange)="alterarProduto(item)">
+
+                                    <option [ngValue]="0">
+                                        -- Selecionar produto --
+                                    </option>
+
+                                    <option *ngFor="let produto of produtos" [ngValue]="produto.id"
+                                        [disabled]="produto.estoque <= 0">
+
+                                        {{ produto.nome }}
+
+                                        -
+                                        {{ produto.preco | number:'1.2-2' }} Kz
+
+                                    </option>
+
+                                </select>
+
+                            </td>
+
+
+                            <!-- ESTOQUE -->
+
+                            <td>
+
+                                <span *ngIf="item.produtoId" [class.text-danger]="obterEstoque(item.produtoId) <= 10"
+                                    [class.fw-bold]="obterEstoque(item.produtoId) <= 10">
+
+                                    {{ obterEstoque(item.produtoId) }}
+
+                                </span>
+
+                                <span *ngIf="!item.produtoId">
+
+                                    -
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- QUANTIDADE -->
+
+                            <td>
+
+                                <input type="number" class="form-control" [(ngModel)]="item.quantidade"
+                                    (ngModelChange)="alterarQuantidade(item)" min="1"
+                                    [max]="obterEstoque(item.produtoId)" [disabled]="!item.produtoId">
+
+                            </td>
+
+
+                            <!-- PREÇO -->
+
+                            <td>
+
+                                {{ obterPreco(item.produtoId) | number:'1.2-2' }}
+                                Kz
+
+                            </td>
+
+
+                            <!-- SUBTOTAL -->
+
+                            <td class="fw-bold">
+
+                                {{ obterSubtotalItem(item) | number:'1.2-2' }}
+                                Kz
+
+                            </td>
+
+
+                            <!-- REMOVER -->
+
+                            <td>
+
+                                <button type="button" class="btn btn-outline-danger btn-sm" (click)="removerItem(i)"
+                                    [disabled]="itens.length === 1">
+
+                                    ×
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- TOTAIS -->
+
+            <div class="totais">
+
+                <div class="total-linha">
+
+                    <span>
+                        Subtotal:
+                    </span>
+
+                    <strong>
+                        {{ calcularSubtotal() | number:'1.2-2' }} Kz
+                    </strong>
+
+                </div>
+
+
+                <div class="total-linha">
+
+                    <span>
+                        Taxa de entrega:
+                    </span>
+
+                    <strong>
+                        {{ taxaEntrega | number:'1.2-2' }} Kz
+                    </strong>
+
+                </div>
+
+
+                <div class="total-linha total-final">
+
+                    <span>
+                        Total:
+                    </span>
+
+                    <strong>
+                        {{ calcularTotal() | number:'1.2-2' }} Kz
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- BOTÃO SALVAR -->
+
+            <div class="form-actions">
+
+                <button type="button" class="btn btn-secondary" (click)="cancelarPedido()">
+
+                    Cancelar
+
+                </button>
+
+
+                <button type="button" class="btn btn-success" (click)="salvarPedido()" [disabled]="salvando">
+
+                    <span *ngIf="!salvando">
+                        Criar Pedido
+                    </span>
+
+                    <span *ngIf="salvando">
+                        Salvando...
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- LISTA DE PEDIDOS -->
+    <!-- ============================= -->
+
+    <div class="card lista-pedidos" *ngIf="!mostrarFormulario">
+
+        <div class="card-header">
+
+            <h2>Pedidos registrados</h2>
+
+            <span class="badge bg-secondary">
+                {{ pedidos.length }} pedido(s)
+            </span>
+
+        </div>
+
+
+        <!-- CARREGANDO -->
+
+        <div class="loading" *ngIf="carregando && pedidos.length === 0">
+
+            Carregando pedidos...
+
+        </div>
+
+
+        <!-- SEM PEDIDOS -->
+
+        <div class="empty-state" *ngIf="!carregando && pedidos.length === 0">
+
+            <div class="empty-icon">
+                🛒
+            </div>
+
+            <h3>Nenhum pedido encontrado</h3>
+
+            <p>
+                Ainda não existem pedidos cadastrados.
+            </p>
+
+            <button type="button" class="btn btn-primary" (click)="novoPedido()">
+
+                + Criar primeiro pedido
+
+            </button>
+
+        </div>
+
+
+        <!-- TABELA -->
+
+        <div class="table-responsive" *ngIf="pedidos.length > 0">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Nº Pedido
+                        </th>
+
+                        <th>
+                            Data
+                        </th>
+
+                        <th>
+                            Cliente
+                        </th>
+
+                        <th>
+                            Pagamento
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th class="text-end">
+                            Subtotal
+                        </th>
+
+                        <th class="text-end">
+                            Total
+                        </th>
+
+                        <th class="text-center">
+                            Ações
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr *ngFor="let pedido of pedidos">
+
+                        <td>
+
+                            <strong>
+                                {{ pedido.NUMERO }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ pedido.DATA_PEDIDO | date:'dd/MM/yyyy HH:mm' }}
+
+                        </td>
+
+
+                        <td>
+
+                            Cliente #{{ pedido.CLIENTE_ID }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ pedido.FORMA_PAGAMENTO }}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge" [class.bg-warning]="pedido.STATUS === 'Pendente'"
+                                [class.bg-info]="pedido.STATUS === 'Em preparação'"
+                                [class.bg-primary]="pedido.STATUS === 'Saiu para entrega'"
+                                [class.bg-success]="pedido.STATUS === 'Entregue'"
+                                [class.bg-danger]="pedido.STATUS === 'Cancelado'">
+
+                                {{ pedido.STATUS }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td class="text-end">
+
+                            {{ pedido.SUBTOTAL | number:'1.2-2' }}
+                            Kz
+
+                        </td>
+
+
+                        <td class="text-end fw-bold">
+
+                            {{ pedido.TOTAL | number:'1.2-2' }}
+                            Kz
+
+                        </td>
+
+                        <td class="text-center">
+
+                            <button type="button" class="btn btn-outline-primary btn-sm" (click)="gerarFatura(pedido)"
+                                title="Gerar e imprimir fatura">
+
+                                🖨️
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

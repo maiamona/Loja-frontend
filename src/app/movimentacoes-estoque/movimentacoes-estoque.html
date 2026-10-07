@@ -1,0 +1,306 @@
+<div class="movimentacoes-page">
+
+  <div class="page-header">
+
+    <div>
+      <h1>📦 Movimentações de Estoque</h1>
+
+      <p>
+        Histórico de entradas, saídas e ajustes de estoque
+      </p>
+    </div>
+
+    <button
+      class="btn btn-primary"
+      (click)="carregarMovimentacoes()"
+      [disabled]="carregando">
+
+      <span *ngIf="!carregando">
+        🔄 Atualizar
+      </span>
+
+      <span *ngIf="carregando">
+        ⏳ A carregar...
+      </span>
+
+    </button>
+
+  </div>
+
+
+  <!-- CARREGANDO -->
+
+  <div
+    *ngIf="carregando"
+    class="alert alert-info">
+
+    ⏳ A atualizar movimentações...
+  </div>
+
+
+  <!-- ERRO -->
+
+  <div
+    *ngIf="erro"
+    class="alert alert-danger">
+
+    {{ erro }}
+
+  </div>
+
+  <!-- FILTROS -->
+
+<div class="filtros-card">
+
+  <div class="filtro-item">
+
+    <label for="filtroProduto">
+      Pesquisar produto
+    </label>
+
+    <input
+      id="filtroProduto"
+      type="text"
+      class="form-control"
+      placeholder="Ex.: Bolo, Arroz..."
+      [(ngModel)]="filtroProduto"
+    />
+
+  </div>
+
+
+  <div class="filtro-item">
+
+    <label for="filtroTipo">
+      Tipo de movimentação
+    </label>
+
+    <select
+      id="filtroTipo"
+      class="form-select"
+      [(ngModel)]="filtroTipo">
+
+      <option value="TODOS">
+        Todos
+      </option>
+
+      <option value="ENTRADA">
+        Entrada
+      </option>
+
+      <option value="SAIDA">
+        Saída
+      </option>
+
+      <option value="AJUSTE">
+        Ajuste
+      </option>
+
+      <option value="DEVOLUCAO">
+        Devolução
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <div class="filtro-acoes">
+
+    <button
+      class="btn btn-outline-secondary"
+      (click)="limparFiltros()">
+
+      🧹 Limpar filtros
+
+    </button>
+
+  </div>
+
+</div>
+
+
+  <!-- RESUMO -->
+
+  <div class="resumo-card">
+
+    <div>
+
+      <span>
+        Total de movimentações
+      </span>
+
+      <strong>
+        {{ movimentacoesFiltradas.length }}
+      </strong>
+
+    </div>
+
+  </div>
+
+
+  <!-- TABELA -->
+
+  <div
+    *ngIf="movimentacoes.length > 0"
+    class="table-container">
+
+    <div class="table-responsive">
+
+      <table class="table table-hover align-middle">
+
+        <thead>
+
+          <tr>
+
+            <th>ID</th>
+
+            <th>Produto</th>
+
+            <th>Tipo</th>
+
+            <th>Quantidade</th>
+
+            <th>Estoque anterior</th>
+
+            <th>Estoque atual</th>
+
+            <th>Motivo</th>
+
+            <th>Pedido</th>
+
+            <th>Data</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="
+              let movimentacao of movimentacoesFiltradas
+            "
+          >
+
+            <td>
+              #{{ movimentacao.id }}
+            </td>
+
+
+            <td>
+
+              <strong>
+                {{ movimentacao.produto }}
+              </strong>
+
+              <small
+                class="d-block text-muted"
+              >
+                ID: {{ movimentacao.produtoId }}
+              </small>
+
+            </td>
+
+
+            <td>
+
+              <span
+                [class]="
+                  obterClasseTipo(
+                    movimentacao.tipo
+                  )
+                "
+              >
+                {{ obterNomeTipo(
+                  movimentacao.tipo
+                ) }}
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <strong>
+                {{ movimentacao.quantidade }}
+              </strong>
+
+            </td>
+
+
+            <td>
+              {{ movimentacao.estoqueAnterior }}
+            </td>
+
+
+            <td>
+
+              <strong
+                [class.text-danger]="
+                  movimentacao.estoqueAtual <= 10
+                "
+              >
+                {{ movimentacao.estoqueAtual }}
+              </strong>
+
+            </td>
+
+
+            <td>
+              {{ movimentacao.motivo }}
+            </td>
+
+
+            <td>
+
+              <span
+                *ngIf="movimentacao.pedido"
+              >
+                {{ movimentacao.pedido }}
+              </span>
+
+              <span
+                *ngIf="!movimentacao.pedido"
+                class="text-muted"
+              >
+                —
+              </span>
+
+            </td>
+
+
+            <td>
+              {{ formatarData(
+                movimentacao.dataMovimentacao
+              ) }}
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- SEM MOVIMENTAÇÕES -->
+
+  <div
+    *ngIf="
+      !carregando &&
+      movimentacoes.length === 0 &&
+      !erro
+    "
+    class="alert alert-secondary"
+  >
+
+    Nenhuma movimentação encontrada.
+
+  </div>
+
+</div>
